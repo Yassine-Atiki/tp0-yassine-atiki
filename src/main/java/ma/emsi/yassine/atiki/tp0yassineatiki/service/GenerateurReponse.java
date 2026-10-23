@@ -22,12 +22,54 @@ public class GenerateurReponse implements Serializable { // Serializable car CDI
      * puis la question en minuscule, le tout entouré de "||".
      */
     public String genererReponse(String question, String roleSysteme) {
-        String resultat = "||";
-        if (roleSysteme != null) {
-            // Ajouter le rôle système en majuscule au début du résultat, suivi d'un saut de ligne.
-            resultat += roleSysteme.toUpperCase(Locale.FRENCH) + "\n";
+        // Supprimer les espaces au debut et a la fin
+        String texte = question.trim();
+
+        //Compter les mots
+        String []mots = texte.split(" ");
+        int nombreMots = mots.length;
+        // Compter les caracteres
+        int nombreCaracteres = texte.length();
+
+        // Chercher le mot le plus long
+        String motPlusLong = "";
+
+        for (String mot : mots) {
+            if (mot.length() > motPlusLong.length()) {
+                motPlusLong = mot;
+            }
         }
-        resultat += question.toLowerCase(Locale.FRENCH) + "||";
+
+        // Chercher les technologies dans le texte
+        String[] technologies = {"java", "jakarta", "spring", "python", "docker", "maven", "git", "react", "angular"};
+
+        String texteMinuscule = texte.toLowerCase();
+        String technologiesTrouvees = "";
+
+        for (String technologie : technologies) {
+            if (texteMinuscule.contains(technologie)) {
+                technologiesTrouvees += technologie + ", ";
+            }
+        }
+
+        if (technologiesTrouvees.equals("")) {
+            technologiesTrouvees = "Aucune";
+        } else {
+            technologiesTrouvees = technologiesTrouvees.substring(
+                    0, technologiesTrouvees.length() - 2
+            );
+        }
+
+        // Preparer la reponse
+        String resultat = "=== ANALYSE DU TEXTE ===\n\n";
+
+        resultat += "Nombre de mots : " + nombreMots + "\n";
+        resultat += "Nombre de caracteres : " + nombreCaracteres + "\n";
+        resultat += "Mot le plus long : " + motPlusLong + "\n";
+        resultat += "Technologies detectees : " + technologiesTrouvees;
+
         return resultat;
     }
+
+
 }
